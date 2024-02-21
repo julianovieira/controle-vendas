@@ -56,7 +56,6 @@ import { pushScopeId } from 'vue';
 import { defineComponent, onMounted, ref } from 'vue'
 import useApi from 'src/composables/useApi'
 import useNotify from 'src/composables/useNotify'
-import useAuthUser from 'src/composables/useAuthUser'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { columnsCategory } from './table'
@@ -65,9 +64,8 @@ export default defineComponent({
   name: 'listCategoryPage',
   setup () {
     const categories = ref([])
-    const { listPublic, remove } = useApi()
+    const { list, remove } = useApi()
     const { notifyError, notifySuccess } = useNotify()
-    const { user } = useAuthUser()
     const table = 'category'
     const loading = ref(true)
     const router = useRouter()
@@ -76,7 +74,7 @@ export default defineComponent({
     const handleListCategories = async () => {
       try {
         loading.value = true
-        categories.value = await listPublic(table, user.value.id)
+        categories.value = await list(table)
         loading.value = false
       } catch (error) {
         notifyError(error.message)

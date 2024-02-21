@@ -56,7 +56,6 @@ import { pushScopeId } from 'vue';
 import { defineComponent, onMounted, ref } from 'vue'
 import useApi from 'src/composables/useApi'
 import useNotify from 'src/composables/useNotify'
-import useAuthUser from 'src/composables/useAuthUser'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { columnsCustomer } from './table'
@@ -65,9 +64,8 @@ export default defineComponent({
   name: 'listCustomerPage',
   setup () {
     const customers = ref([])
-    const { listPublic, remove } = useApi()
+    const { list, remove } = useApi()
     const { notifyError, notifySuccess } = useNotify()
-    const { user } = useAuthUser()
     const table = 'customer'
     const loading = ref(true)
     const router = useRouter()
@@ -76,7 +74,7 @@ export default defineComponent({
     const handleListCustomers = async () => {
       try {
         loading.value = true
-        customers.value = await listPublic(table, user.value.id)
+        customers.value = await list(table)
         loading.value = false
       } catch (error) {
         notifyError(error.message)

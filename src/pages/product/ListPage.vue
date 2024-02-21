@@ -93,7 +93,7 @@ export default defineComponent({
   name: 'listProductPage',
   setup () {
     const products = ref([])
-    const { listPublic, remove } = useApi()
+    const { list, remove } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     const { user } = useAuthUser()
     const table = 'product'
@@ -104,7 +104,7 @@ export default defineComponent({
     const handleListProducts = async () => {
       try {
         loading.value = true
-        products.value = await listPublic(table, user.value.id)
+        products.value = await list(table)
         loading.value = false
       } catch (error) {
         notifyError(error.message)
