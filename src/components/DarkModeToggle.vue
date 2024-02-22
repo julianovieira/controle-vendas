@@ -4,7 +4,7 @@
     checked-icon="mdi-weather-night"
     color="dark"
     unchecked-icon="mdi-white-balance-sunny"
-    size="lg"
+    size="md"
   />
 </template>
 <script>

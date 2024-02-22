@@ -1,7 +1,7 @@
 import useAuthUser from 'src/composables/useAuthUser'
 import useSupabase from 'src/boot/supabase'
 import useBrand from 'src/composables/useBrand'
-// import { useQuasar } from 'quasar'
+import { useQuasar } from 'quasar'
 
 import { v4 as uuidv4 } from 'uuid'
 import { useRoute } from 'vue-router'
@@ -20,7 +20,7 @@ export default function useApi () {
   const { user } = useAuthUser()
   const { setBrand } = useBrand()
   const route = useRoute()
-  // const $q = useQuasar()
+  const $q = useQuasar()
 
   const list = async (tabela) => {
     const { data, error } = await supabase
@@ -122,7 +122,7 @@ export default function useApi () {
   const getBrand = async () => {
     const id = route.params.id || user?.value?.id
     if (id) {
-      // $q.loading.show()
+      $q.loading.show()
       const { data, error } = await supabase
         .from('config')
         .select('*')
@@ -133,7 +133,7 @@ export default function useApi () {
         brand.value = data[0]
         setBrand(brand.value.primary, brand.value.secondary)
       }
-      // $q.loading.hide()
+      $q.loading.hide()
       console.log(brand)
       return brand
     }

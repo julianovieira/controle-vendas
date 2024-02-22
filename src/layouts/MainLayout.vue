@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Controle de Vendas
+          Vendas
         </q-toolbar-title>
 
         <dark-mode-toggle />
@@ -38,7 +38,7 @@
         <q-item-label
           header
         >
-          Menus
+          MENUS
         </q-item-label>
 
         <EssentialLink
@@ -81,6 +81,12 @@ const linksList = [
     routeName: 'dashboard'
   },
   {
+    title: 'Lançamentos',
+    caption: '',
+    icon: 'mdi-cart-arrow-right',
+    routeName: 'sale'
+  },
+  {
     title: 'Clientes',
     caption: '',
     icon: 'mdi-card-account-details',
@@ -99,7 +105,7 @@ const linksList = [
     routeName: 'product'
   },
   {
-    title: 'Config',
+    title: 'Configurações',
     caption: '',
     icon: 'mdi-cog',
     routeName: 'form-config'
@@ -135,6 +141,7 @@ export default defineComponent({
         persistent: true
       }).onOk(async () => {
         await logout()
+        localStorage.removeItem('listItens')
         notifySuccess('Logout realizado com sucesso')
         router.replace({ name: 'login' })
       })
