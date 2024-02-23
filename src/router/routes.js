@@ -24,6 +24,8 @@ const routes = [
       { path: 'product', name: 'product', component: () => import('src/pages/product/ListPage.vue') },
       { path: 'form-product/:id?', name: 'form-product', component: () => import('src/pages/product/FormPage.vue') },
       { path: 'form-config', name: 'form-config', component: () => import('src/pages/config/FormPage.vue') },
+      { path: 'payment', name: 'payment', component: () => import('src/pages/payment/ListPage.vue') },
+      { path: 'form-payment/:id?', name: 'form-payment', component: () => import('src/pages/payment/FormPage.vue') },
       { path: 'sale', name: 'sale', component: () => import('pages/sale/FormPage.vue') }
     ],
     meta: {

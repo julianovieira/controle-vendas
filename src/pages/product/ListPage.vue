@@ -10,10 +10,10 @@
       >
       <template v-slot:top>
         <span class="text-h6">
-            Lista de Produtos
+            Produtos
         </span>
         <q-btn
-          label="Catalogo Produtos"
+          label="Catálogo"
           dense
           size="sm"
           outline
@@ -23,7 +23,7 @@
           @click="handleGoToStore"
         />
         <q-btn
-          label="Copia Link"
+          label="Link"
           dense
           size="sm"
           outline

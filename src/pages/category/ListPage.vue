@@ -11,7 +11,7 @@ import { pushScopeId } from 'vue';
       >
       <template v-slot:top>
         <span class="text-h6">
-            Lista de Categorias
+            Categorias
         </span>
         <q-space />
         <q-btn v-if="$q.platform.is.desktop"

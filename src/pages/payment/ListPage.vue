@@ -4,14 +4,14 @@ import { pushScopeId } from 'vue';
     <div class="row">
       <q-table
         class="col-12"
-        :rows="customers"
-        :columns="columnsCustomer"
+        :rows="payments"
+        :columns="columnsPayment"
         :loading="loading"
         row-key="id"
       >
       <template v-slot:top>
         <span class="text-h6">
-            Clientes
+            Formas de Pagamentos
         </span>
         <q-space />
         <q-btn v-if="$q.platform.is.desktop"
@@ -20,9 +20,9 @@ import { pushScopeId } from 'vue';
           icon="mdi-plus-box"
           rounded
           flat
-          :to="{ name: 'form-customer' }" >
+          :to="{ name: 'form-payment' }" >
             <q-tooltip>
-              Cliente Novo
+              Categoria Nova
             </q-tooltip>
         </q-btn>
       </template>
@@ -33,7 +33,7 @@ import { pushScopeId } from 'vue';
                 Editar
               </q-tooltip>
             </q-btn>
-            <q-btn icon="mdi-delete-outline" color="negative" dense size="sm" @click="handleRemoveProduct(props.row)">
+            <q-btn icon="mdi-delete-outline" color="negative" dense size="sm" @click="handleRemovePayment(props.row)">
               <q-tooltip>
                 Remover
               </q-tooltip>
@@ -46,7 +46,7 @@ import { pushScopeId } from 'vue';
     <q-page-sticky v-if="$q.platform.is.mobile"
       position="bottom-right"
       :offset="[18, 18]">
-      <q-btn fab icon="mdi-plus" color="primary" :to="{ name: 'form-customer'}">
+      <q-btn fab icon="mdi-plus" color="primary" :to="{ name: 'form-payment'}">
       </q-btn>
     </q-page-sticky>
  </q-page>
@@ -58,23 +58,23 @@ import useApi from 'src/composables/useApi'
 import useNotify from 'src/composables/useNotify'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
-import { columnsCustomer } from './table'
+import { columnsPayment } from './table'
 
 export default defineComponent({
-  name: 'listCustomerPage',
+  name: 'listCategoryPage',
   setup () {
-    const customers = ref([])
+    const payments = ref([])
     const { list, remove } = useApi()
     const { notifyError, notifySuccess } = useNotify()
-    const table = 'customer'
+    const table = 'payment'
     const loading = ref(true)
     const router = useRouter()
     const $q = useQuasar()
 
-    const handleListCustomers = async () => {
+    const handleListPayments = async () => {
       try {
         loading.value = true
-        customers.value = await list(table)
+        payments.value = await list(table)
         loading.value = false
       } catch (error) {
         notifyError(error.message)
@@ -82,24 +82,24 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      handleListCustomers()
+      handleListPayments()
     })
 
-    const handleEdit = (customer) => {
-      router.push({ name: 'form-customer', params: { id: customer.id } })
+    const handleEdit = (payment) => {
+      router.push({ name: 'form-payment', params: { id: payment.id } })
     }
 
-    const handleRemoveProduct = (customer) => {
+    const handleRemovePayment = (payment) => {
       try {
         $q.dialog({
           title: 'Confirme',
-          message: `Gostaria realmente de remover (a/o) cliente - ${customer.name}?`,
+          message: `Gostaria realmente de remover a forma de pagamento - ${payment.name}?`,
           cancel: true,
           persistent: true
         }).onOk(async () => {
-          await remove(table, customer.id)
+          await remove(table, payment.id)
           notifySuccess('Removido com sucesso')
-          handleListCustomers()
+          handleListPayments()
         })
       } catch (error) {
         notifyError(error.message)
@@ -107,11 +107,11 @@ export default defineComponent({
     }
 
     return {
-      columnsCustomer,
-      customers,
+      columnsPayment,
+      payments,
       loading,
       handleEdit,
-      handleRemoveProduct
+      handleRemovePayment
     }
   }
 })

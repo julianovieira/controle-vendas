@@ -105,6 +105,12 @@ const linksList = [
     routeName: 'product'
   },
   {
+    title: 'Forma Pagmento',
+    caption: '',
+    icon: 'mdi-credit-card-multiple',
+    routeName: 'payment'
+  },
+  {
     title: 'Configurações',
     caption: '',
     icon: 'mdi-cog',
