@@ -26,7 +26,8 @@ const routes = [
       { path: 'form-config', name: 'form-config', component: () => import('src/pages/config/FormPage.vue') },
       { path: 'payment', name: 'payment', component: () => import('src/pages/payment/ListPage.vue') },
       { path: 'form-payment/:id?', name: 'form-payment', component: () => import('src/pages/payment/FormPage.vue') },
-      { path: 'sale', name: 'sale', component: () => import('pages/sale/FormPage.vue') }
+      { path: 'form-sale/id?', name: 'form-sale', component: () => import('pages/sale/FormPage.vue') },
+      { path: 'sale', name: 'sale', component: () => import('pages/sale/ListPage.vue') }
     ],
     meta: {
       requiredAuth: true

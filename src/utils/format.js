@@ -1,3 +1,5 @@
+import { date } from 'quasar'
+
 const formatCurrency = (currency) => {
   const formatted = currency.toLocaleString('pt-BR', {
     style: 'currency',
@@ -26,8 +28,14 @@ const formatPhone = (phone) => {
   return phone
 }
 
+const formatDate = (data) => {
+  const dataFormatada = date.formatDate(data, 'DD/MM/YYYY HH:mm:ss')
+  return dataFormatada
+}
+
 export {
   formatCurrency,
   formatCPF,
-  formatPhone
+  formatPhone,
+  formatDate
 }

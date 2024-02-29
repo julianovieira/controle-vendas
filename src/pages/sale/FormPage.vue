@@ -1,81 +1,16 @@
 <template>
   <q-page padding>
     <!-- Informações de gerais do pedido -->
-    <div class="row justify-between q-pa-sm">
-      <q-card class="col-md-12 col-sm-12 col-xs-12 q-pa-sm">
-        <div class="text-h6 text-center text-bold q-mb-sm">Informações Venda </div>
-        <!-- Informações do produto -->
-        <div class="row">
-          <div class="col-md-6">
-            <div class="text-center text-bold">Produto</div>
-            <div class="row q-gutter-sm q-mb-sm">
-              <q-select
-                filled
-                standout
-                placeholder="Selecionar"
-                v-model="products"
-                use-input
-                hide-selected
-                fill-input
-                input-debounce="0"
-                :options="options"
-                @filter="filterFn"
-                @input-value="setProduct"
-                dense
-              >
-                <template v-slot:no-option>
-                  <q-item>
-                    <q-item-section class="text-grey">
-                      Sem resultados
-                    </q-item-section>
-                  </q-item>
-                </template>
-                <template v-slot:prepend>
-                  <q-icon name="search" />
-                </template>
-              </q-select>
-              <q-input
-                label="Quantidade"
-                filled
-                v-model="formProductList.quant"
-                min="0"
-                dense
-                type="number"
-              />
-              <q-input
-                label="Preço"
-                filled
-                v-model="formProductList.price_unit"
-                min="0"
-                prefix="R$"
-                dense
-                type="number"
-              />
-            </div>
-            <div class="row justify-between">
-              <q-btn
-                flat
-                class="q-pa-sm"
-                color="primary"
-                label="Inserir Produto"
-                @click="insertListItem"
-                dense
-                no-caps
-              />
-              <div class="flex text-center q-mr-sm">
-                <label class="text-subtitle2 text-primary q-pa-md"><strong>Total: </strong></label>
-                <span class=" q-ml-sm text-subtitle2 text-bold text-primary q-pa-md">
-                  R$ {{ (formProductList.price_unit * formProductList.quant).toFixed(2) }}
-                </span>
-              </div>
-            </div>
-          </div>
-<!--  Informações de cliente e pagamento -->
-          <div class="col-md-6">
-            <div class="text-center text-bold">cliente</div>
+    <div class="row q-gutter-sm q-pa-sm">
+      <q-card class="col-md-12 col-sm-12 col-xs-12 q-pa-md">
+        <div class="text-h6 text-center text-bold q-mb-md">Informações do Lançamento </div>
+        <div class="row q-gutter-md q-px-sm">
+          <div class="col-md-5 col-sm-12 col-xs-12">
+            <!-- Informações sobre cliente -->
+            <div class="text-left text-bold">Cliente</div>
             <div class="row">
               <q-select
-                class="col-12 q-mb-sm"
+                class="col-12 "
                 filled
                 standout
                 placeholder="Selecionar"
@@ -101,49 +36,145 @@
                 </template>
               </q-select>
             </div>
-      <!-- Informações de forma de pagamentos -->
-            <div class="row q-mt-sm" style="width: 100%;">
-              <div style="display:flex; align-items:center;">
-                <div class="text-center text-bold q-ml-md q-mr-lg">Forma de Pagamento:</div>
-                <q-select
-                  filled
-                  standout
-                  placeholder="Selecionar"
-                  v-model="payments"
-                  use-input
-                  hide-selected
-                  fill-input
-                  input-debounce="0"
-                  :options="optionsPayments"
-                  @filter="filterFnPayments"
-                  @input-value="setPayments"
-                  dense
-                >
-                  <template v-slot:no-option>
-                    <q-item>
-                      <q-item-section class="text-grey">
-                        Sem resultados
-                      </q-item-section>
-                    </q-item>
-                  </template>
-                  <template v-slot:prepend>
-                    <q-icon name="search" />
-                  </template>
-                </q-select>
-
-              </div>
+          </div>
+          <!-- Informações sobre a forma de pagamento -->
+          <div class="col-md-3 col-sm-12 col-xs-12">
+            <div class="text-left text-bold" >Pagamento</div>
+            <q-select
+              filled
+              standout
+              placeholder="Selecionar"
+              v-model="payments"
+              use-input
+              hide-selected
+              fill-input
+              input-debounce="0"
+              :options="optionsPayments"
+              @filter="filterFnPayments"
+              @input-value="setPayments"
+              dense
+            >
+              <template v-slot:no-option>
+                <q-item>
+                  <q-item-section class="text-grey">
+                    Sem resultados
+                  </q-item-section>
+                </q-item>
+              </template>
+              <template v-slot:prepend>
+                <q-icon name="search" />
+              </template>
+            </q-select>
+          </div>
+          <!-- Informações sobre tipo de movimentação -->
+          <div class="col-md-3 col-sm-12 col-xs-12">
+            <div class="text-left text-bold" >Movimentação</div>
+            <q-select
+              filled
+              standout
+              placeholder="Selecionar"
+              v-model="typeMov"
+              use-input
+              hide-selected
+              fill-input
+              input-debounce="0"
+              :options="optionsTypeMov"
+              @filter="filterFnTypeMov"
+              @input-value="setTypeMov"
+              dense
+            >
+              <template v-slot:no-option>
+                <q-item>
+                  <q-item-section class="text-grey">
+                    Sem resultados
+                  </q-item-section>
+                </q-item>
+              </template>
+              <template v-slot:prepend>
+                <q-icon name="search" />
+              </template>
+            </q-select>
+          </div>
+        </div>
+      </q-card>
+    <!-- Informações tela adicinar itens de produtos -->
+      <q-card class="col-md-12 col-sm-12 col-xs-12 q-pa-md">
+        <div class="q-px-sm">
+          <div class="text-left text-bold">Produto</div>
+          <div class="row q-gutter-md">
+            <q-select
+              class="col-md-5 col-sm-12 col-xs-12"
+              filled
+              standout
+              placeholder="Selecionar"
+              v-model="products"
+              use-input
+              hide-selected
+              fill-input
+              input-debounce="0"
+              :options="options"
+              @filter="filterFn"
+              @input-value="setProduct"
+              dense
+            >
+              <template v-slot:no-option>
+                <q-item>
+                  <q-item-section class="text-grey">
+                    Sem resultados
+                  </q-item-section>
+                </q-item>
+              </template>
+              <template v-slot:prepend>
+                <q-icon name="search" />
+              </template>
+            </q-select>
+            <q-input
+              class="col-md-3 col-sm-12 col-xs-12"
+              label="Quantidade"
+              filled
+              v-model="formProductList.quant"
+              min="0"
+              dense
+              type="number"
+            />
+            <q-input
+              class="col-md-3 col-sm-12 col-xs-12"
+              label="Preço"
+              filled
+              v-model="formProductList.price_unit"
+              min="0"
+              prefix="R$"
+              dense
+              type="number"
+            />
+          </div>
+          <div class="row justify-between">
+            <q-btn
+              flat
+              class="q-pa-sm"
+              color="primary"
+              label="Inserir Produto"
+              @click="insertListItem"
+              dense
+              no-caps
+            />
+            <div class="flex text-center q-mr-sm">
+              <label class="text-subtitle2 text-primary q-pa-md"><strong>Total: </strong></label>
+              <span class=" q-ml-sm text-subtitle2 text-bold text-primary q-pa-md">
+                R$ {{ (formProductList.price_unit * formProductList.quant).toFixed(2) }}
+              </span>
             </div>
           </div>
         </div>
       </q-card>
-      </div>
+    </div>
   <!-- Informações da listagem de produtos -->
-    <div class="row justify-between q-pa-sm">
+    <div class="row q-mt-sm">
       <q-card class="col-md-12 col-sm-12 col-xs-12 q-pa-md" >
         <q-table
-        title="Lista de Itens"
+        title="Lista Produtos"
         :rows="listItens"
-        :columns="columnsSale"
+        :columns="columnsSaleItens"
         row-key="name"
         virtual-scroll
         v-model:pagination="pagination"
@@ -163,46 +194,53 @@
       </q-card>
     </div>
 <!-- Informações de total venda e botão finalizar -->
-    <div class="row q-pa-sm">
+    <div class="row q-mt-md">
       <q-card class="row justify-between col-md-12 col-sm-12 col-xs-12 q-pa-md q-col-gutter-y-sm">
         <div class="flex text-center q-mr-sm">
-          <label class="text-h5"><strong>Total: </strong></label>
-          <span class=" q-ml-md text-h5 text-bold">
+          <label class="text-h6"><strong>Total: </strong></label>
+          <span class=" q-ml-md text-h6 text-bold">
             R$ {{saleTotal(listItens)}}
           </span>
         </div>
         <div>
           <q-btn
             color="primary"
-            text-color="dark"
+            text-color="white"
             unelevated
             icon="mdi-cart-outline"
             label="Finalizar Venda"
             size="md"
+            @click="submitEndSale"
           />
         </div>
       </q-card>
     </div>
   </q-page>
 </template>
+
 <script>
+
 import { defineComponent, onMounted, ref, watch } from 'vue'
 import useApi from 'src/composables/useApi'
 import useNotify from 'src/composables/useNotify'
-import { columnsSale } from './table'
+import { columnsSaleItens } from './table'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   setup () {
     const products = ref([])
     const customers = ref([])
     const payments = ref([])
+    const typeMov = ref([])
 
-    const { list } = useApi()
-    const { notifyError } = useNotify()
+    const { list, post } = useApi()
+    const { notifyError, notifySuccess } = useNotify()
+    const router = useRouter()
 
     const listProducts = ref([])
     const listCustomer = ref([])
     const listPayment = ref([])
+    const listTypeMov = ref([])
 
     const stringOptions = ref([])
     const newStringOptions = ref([])
@@ -216,12 +254,31 @@ export default defineComponent({
     const newStringOptionsPayments = ref([])
     const optionsPayments = ref(stringOptionsPayments)
 
+    const stringOptionsTypeMov = ref([])
+    const newStringOptionsTypeMov = ref([])
+    const optionsTypeMov = ref(stringOptionsTypeMov)
+
     const formProductList = ref({
-      id_produto: '',
+      sale_id: '',
+      product_id: '',
       description: '',
       quant: 0,
       price_unit: 0,
       price_total: 0
+    })
+
+    const formSale = ref({
+      total_value: 0,
+      customer_id: '',
+      payment_id: '',
+      type_mov_id: ''
+    })
+
+    const formMovStock = ref({
+      sale_id: '',
+      product_id: '',
+      type_mov_id: '',
+      quant: 0
     })
 
     const listItens = ref([])
@@ -230,6 +287,7 @@ export default defineComponent({
       handlePerProducts()
       handlePerCustomers()
       handlePerPayments()
+      handlePerTypeMov()
       if (localStorage.getItem('listItens')) {
         listItens.value = JSON.parse(localStorage.getItem('listItens'))
       }
@@ -240,7 +298,7 @@ export default defineComponent({
     })
 
     const insertListItem = () => {
-      formProductList.value.id_produto = products.value.id
+      formProductList.value.product_id = products.value.id
       formProductList.value.description = products.value.label
       formProductList.value.price_total = (formProductList.value.price_unit * formProductList.value.quant)
       const formList = formProductList.value
@@ -248,6 +306,8 @@ export default defineComponent({
       localStorage.setItem('listItens', JSON.stringify(listItens.value))
       formProductList.value = { id_produto: '', description: '', quant: 0, price_unit: 0, price_total: 0 }
     }
+
+    // const updateStock = (listProduct) => {}
 
     const handlePerProducts = async () => {
       try {
@@ -278,12 +338,24 @@ export default defineComponent({
     const handlePerPayments = async () => {
       try {
         const data = await list('payment')
-        console.log(data)
         listPayment.value = data
         listPayment.value.forEach((payment) => {
           stringOptionsPayments.value.push({ label: payment.name, id: payment.id })
         })
         newStringOptionsPayments.value = stringOptionsPayments.value
+      } catch (error) {
+        notifyError(error)
+      }
+    }
+
+    const handlePerTypeMov = async () => {
+      try {
+        const data = await list('type_mov')
+        listTypeMov.value = data
+        listTypeMov.value.forEach((typeMov) => {
+          stringOptionsTypeMov.value.push({ label: typeMov.name, id: typeMov.id })
+        })
+        newStringOptionsTypeMov.value = stringOptionsTypeMov.value
       } catch (error) {
         notifyError(error)
       }
@@ -327,6 +399,51 @@ export default defineComponent({
       })
     }
 
+    const filterFnTypeMov = (val, update, abort) => {
+      update(() => {
+        const needle = val.toLocaleLowerCase()
+        if (val === '') {
+          optionsTypeMov.value = stringOptionsTypeMov.value
+        } else {
+          optionsTypeMov.value = newStringOptionsTypeMov.value.filter(v => v.label.toLocaleLowerCase().includes(needle))
+        }
+      })
+    }
+
+    const submitEndSale = async () => {
+      try {
+        if (listItens.value.length) {
+          formSale.value.customer_id = customers.value.id
+          formSale.value.payment_id = payments.value.id
+          formSale.value.type_mov_id = typeMov.value.id
+
+          formSale.value.total_value = parseFloat(saleTotal(listItens.value))
+
+          const venda = await post('sale', formSale.value)
+
+          listItens.value.forEach(async (item) => {
+            item.sale_id = venda[0].id
+
+            await post('sale_has_product', item)
+
+            formMovStock.value.product_id = item.product_id
+            formMovStock.value.quant = item.quant
+            formMovStock.value.type_mov_id = typeMov.value.id
+            formMovStock.value.sale_id = venda[0].id
+
+            await post('mov_stock', formMovStock.value)
+          })
+          localStorage.removeItem('listItens')
+          notifySuccess('Venda salva com sucesso')
+          router.push({ name: 'sale' })
+        } else {
+          notifyError('Não é permitida venda SEM ITENS')
+        }
+      } catch (error) {
+        notifyError(error)
+      }
+    }
+
     const setProduct = (val) => {
       products.value = val
     }
@@ -337,6 +454,10 @@ export default defineComponent({
 
     const setPayments = (val) => {
       payments.value = val
+    }
+
+    const setTypeMov = (val) => {
+      typeMov.value = val
     }
 
     const saleTotal = (listItem) => {
@@ -353,20 +474,25 @@ export default defineComponent({
       products,
       customers,
       payments,
+      typeMov,
       options,
       optionsCustomers,
       optionsPayments,
+      optionsTypeMov,
       handlePerProducts,
       handlePerCustomers,
       handleRemoveProduct,
+      submitEndSale,
       filterFn,
       filterFnCustomers,
       filterFnPayments,
+      filterFnTypeMov,
       setProduct,
       setCustomers,
       setPayments,
+      setTypeMov,
       formProductList,
-      columnsSale,
+      columnsSaleItens,
       listItens,
       saleTotal,
       insertListItem,

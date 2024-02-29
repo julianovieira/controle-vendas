@@ -5,24 +5,26 @@
       @befor-hide="handleClose"
       persistent
     >
-        <q-card >
+        <q-card class="q-pa-md" >
             <q-card-section>
-                <div class="text-h6">
+                <div class="text-subtitle2 text-center">
                     Cadastro de Categoria
                 </div>
             </q-card-section>
-            <q-form class="col-md-7 col-sm-12 col-xs-12 q-gutter-y-md" @submit.prevent="handleSubmit">
+            <q-separator />
+            <q-form class="col-md-12 col-sm-12 col-xs-12 " @submit.prevent="handleSubmit">
               <q-card-section>
                 <q-input
                   label="Nome"
                   v-model="form.name"
                   lazy-rules
                   :rules="[val => (val && val.length > 0) || 'Nome é obrigatório!']"
+                  dense
                 />
               </q-card-section>
               <q-card-actions align="right">
-                <q-btn label="Cancelar" outline color="negative" v-close-popup @click="handleClose" />
-                <q-btn label="Salvar" icon="check" color="green" type="submit" />
+                <q-btn label="Cancelar" flat color="negative" v-close-popup @click="handleClose" dense no-caps />
+                <q-btn label="Salvar" icon="check" color="green" type="submit" dense no-caps />
               </q-card-actions>
             </q-form>
         </q-card>

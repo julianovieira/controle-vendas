@@ -67,12 +67,13 @@ export default function useApi () {
   const post = async (tabela, form) => {
     const { data, error } = await supabase
       .from(tabela)
-      .insert([
+      .upsert(
         {
           ...form,
           user_id: user.value.id
         }
-      ])
+      )
+      .select()
     if (error) throw error
     return data
   }
@@ -134,7 +135,6 @@ export default function useApi () {
         setBrand(brand.value.primary, brand.value.secondary)
       }
       $q.loading.hide()
-      console.log(brand)
       return brand
     }
   }

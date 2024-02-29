@@ -51,13 +51,13 @@ export default defineComponent({
   },
   setup (props, { emit }) {
     const { brand } = useApi()
-    const phone = '991660492'
-    const msg = 'Hi, I am interested in the product: '
+    // const phone = '991660492'
+    const msg = 'Olá, estou interessado no produto: '
     const handleClose = () => {
       emit('hideDialog')
     }
     const handleSendWhatsapp = () => {
-      const link = encodeURI(`https://api.whatsapp.com/send?phone=55${phone}&text=${msg} - ${props.product.name} - ${formatCurrency(props.product.price)}`)
+      const link = encodeURI(`https://api.whatsapp.com/send?phone=55${brand.phone}&text=${msg} - ${props.product.name} - ${formatCurrency(props.product.price)}`)
       openURL(link)
     }
     return {

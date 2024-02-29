@@ -12,14 +12,6 @@
                 :rules="[val => (val && val.length > 0) || 'Nome é Obrigatório!']"
               />
               <q-input
-                label="CPF/CNPJ"
-                v-model="form.cpf_cnpj"
-                mask="###.###.###-##"
-                unmasked-value
-                lazy-rules
-                :rules="[val => (val && val.length > 0) || 'CPF ou CNPJ é Obrigatório']"
-              />
-              <q-input
                 label="Email"
                 type="email"
                 v-model="form.email"
@@ -34,7 +26,7 @@
                 lazy-rules
                 :rules="[val => (val && val.length > 0) || 'Telefone é Obrigatório!']"
               />
-              <q-editor placeholder="Digite seu endereço..." v-model="form.address" min-height="5rem" />
+              <q-editor placeholder="Digite seu endereço..." v-model="form.description" min-height="5rem" />
               <q-btn
                 :label="isUpdate ? 'Atualizar' : 'Salvar'"
                 type="submit"
@@ -74,10 +66,9 @@ export default defineComponent({
     let customer = {}
     const form = ref({
       name: '',
-      cpf_cnpj: '',
       email: '',
       phone: '',
-      address: ''
+      description: ''
     })
 
     const isUpdate = computed(() => route.params.id)

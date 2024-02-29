@@ -56,11 +56,11 @@ export default defineComponent({
 
     onMounted(() => {
       if (isUpdate.value) {
-        handleGetCategory(isUpdate.value)
+        handleGetPayment(isUpdate.value)
       }
     })
 
-    const handleGetCategory = async (id) => {
+    const handleGetPayment = async (id) => {
       try {
         payment = await getById(table, id)
         form.value = payment
