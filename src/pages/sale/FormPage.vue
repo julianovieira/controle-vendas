@@ -233,7 +233,7 @@ export default defineComponent({
     const payments = ref([])
     const typeMov = ref([])
 
-    const { list, post } = useApi()
+    const { list, post, getById, update } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     const router = useRouter()
 
@@ -304,10 +304,20 @@ export default defineComponent({
       const formList = formProductList.value
       listItens.value.push(formList)
       localStorage.setItem('listItens', JSON.stringify(listItens.value))
-      formProductList.value = { id_produto: '', description: '', quant: 0, price_unit: 0, price_total: 0 }
+      formProductList.value = { product_id: '', description: '', quant: 0, price_unit: 0, price_total: 0 }
     }
 
-    // const updateStock = (listProduct) => {}
+    const updateStockTake = async (productId, quant) => {
+      try {
+        const product = await getById('product', productId)
+        if (product.amount > 0) {
+          product.amount -= quant
+          await update('product', product)
+        }
+      } catch (error) {
+        notifyError(error)
+      }
+    }
 
     const handlePerProducts = async () => {
       try {
@@ -431,7 +441,8 @@ export default defineComponent({
             formMovStock.value.type_mov_id = typeMov.value.id
             formMovStock.value.sale_id = venda[0].id
 
-            await post('mov_stock', formMovStock.value)
+            const stock = await post('mov_stock', formMovStock.value)
+            updateStockTake(stock[0].product_id, stock[0].quant)
           })
           localStorage.removeItem('listItens')
           notifySuccess('Venda salva com sucesso')

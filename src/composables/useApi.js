@@ -64,6 +64,16 @@ export default function useApi () {
     return data[0]
   }
 
+  const getListStock = async (tabela, idSale) => {
+    const { data, error } = await supabase
+      .from(tabela)
+      .select('*')
+      .eq('sale_id', idSale)
+    if (error) throw error
+    console.log(data)
+    return data
+  }
+
   const post = async (tabela, form) => {
     const { data, error } = await supabase
       .from(tabela)
@@ -144,6 +154,7 @@ export default function useApi () {
     listPublic,
     fetchCount,
     getById,
+    getListStock,
     post,
     update,
     remove,

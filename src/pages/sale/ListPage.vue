@@ -27,11 +27,6 @@
       </template>
       <template v-slot:body-cell-actions="props">
         <q-td :props="props" class="q-gutter-x-sm">
-            <q-btn icon="mdi-file-edit-outline" color="info" dense size="sm" @click="handleEdit(props.row)" >
-              <q-tooltip>
-                Editar
-              </q-tooltip>
-            </q-btn>
             <q-btn icon="mdi-delete-outline" color="negative" dense size="sm" @click="handleRemoveSale(props.row)">
               <q-tooltip>
                 Remover
@@ -55,7 +50,6 @@
 import { defineComponent, onMounted, ref } from 'vue'
 import useApi from 'src/composables/useApi'
 import useNotify from 'src/composables/useNotify'
-import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { columnsSale } from './table'
 
@@ -63,17 +57,15 @@ export default defineComponent({
   name: 'listSalePage',
   setup () {
     const sales = ref([])
-    const { list, remove } = useApi()
+    const { list, remove, getListStock, update, getById } = useApi()
     const { notifyError, notifySuccess } = useNotify()
-    const table = 'list_sales'
     const loading = ref(true)
-    const router = useRouter()
     const $q = useQuasar()
 
     const handleListSale = async () => {
       try {
         loading.value = true
-        sales.value = await list(table)
+        sales.value = await list('list_sales')
         loading.value = false
       } catch (error) {
         notifyError(error.message)
@@ -84,8 +76,16 @@ export default defineComponent({
       handleListSale()
     })
 
-    const handleEdit = (sale) => {
-      router.push({ name: 'form-sale', params: { id: sale.id } })
+    const updateStockReturn = async (productId, quant) => {
+      try {
+        const product = await getById('product', productId)
+        if (product.amount > 0) {
+          product.amount += quant
+          await update('product', product)
+        }
+      } catch (error) {
+        notifyError(error)
+      }
     }
 
     const handleRemoveSale = (sale) => {
@@ -96,7 +96,11 @@ export default defineComponent({
           cancel: true,
           persistent: true
         }).onOk(async () => {
-          await remove(table, sale.id)
+          const stock = await getListStock('mov_stock', sale.id)
+          stock.forEach(item => {
+            updateStockReturn(item.product_id, item.quant)
+          })
+          await remove('sale', sale.id)
           notifySuccess('Removido com sucesso')
           handleListSale()
         })
@@ -109,7 +113,6 @@ export default defineComponent({
       columnsSale,
       sales,
       loading,
-      handleEdit,
       handleRemoveSale
     }
   }
