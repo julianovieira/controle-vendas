@@ -3,14 +3,14 @@
     <div class="row">
       <q-table
         class="col-12"
-        :rows="sales"
-        :columns="columnsSale"
+        :rows="entries"
+        :columns="columnsEntry"
         :loading="loading"
         row-key="id"
       >
       <template v-slot:top>
         <span class="text-h6">
-            Vendas
+            Entradas
         </span>
         <q-space />
         <q-btn v-if="$q.platform.is.desktop"
@@ -19,20 +19,20 @@
           icon="mdi-plus-box"
           rounded
           flat
-          :to="{ name: 'form-sale' }" >
+          :to="{ name: 'form-entry' }" >
             <q-tooltip>
-              Lançamento Novo
+              Entrada Nova
             </q-tooltip>
         </q-btn>
       </template>
       <template v-slot:body-cell-actions="props">
         <q-td :props="props" class="q-gutter-x-sm">
-          <q-btn icon="mdi-view-list-outline" color="info" dense size="sm" @click="handleShowSaleDetails(props.row)">
+          <q-btn icon="mdi-view-list-outline" color="info" dense size="sm" @click="handleShowEntryDetails(props.row)">
               <q-tooltip>
                 Detalhes
               </q-tooltip>
             </q-btn>
-            <q-btn icon="mdi-delete-outline" color="negative" dense size="sm" @click="handleRemoveSale(props.row)">
+            <q-btn icon="mdi-delete-outline" color="negative" dense size="sm" @click="handleRemoveEntry(props.row)">
               <q-tooltip>
                 Remover
               </q-tooltip>
@@ -41,11 +41,11 @@
       </template>
       </q-table>
     </div>
-    <!-- Botão flutuante para cadastro de categoria em despositivo mobile -->
+    <!-- Botão flutuante para cadastro de entradas em despositivo mobile -->
     <q-page-sticky v-if="$q.platform.is.mobile"
       position="bottom-right"
       :offset="[18, 18]">
-      <q-btn fab icon="mdi-plus" color="primary" :to="{ name: 'form-sale'}">
+      <q-btn fab icon="mdi-plus" color="primary" :to="{ name: 'form-entry'}">
       </q-btn>
     </q-page-sticky>
     <DialogSaleDetails
@@ -62,16 +62,16 @@ import { defineComponent, onMounted, ref } from 'vue'
 import useApi from 'src/composables/useApi'
 import useNotify from 'src/composables/useNotify'
 import { useQuasar } from 'quasar'
-import { columnsSale } from './table'
+import { columnsEntry } from './table'
 import DialogSaleDetails from 'src/components/DialogSaleDetails.vue'
 
 export default defineComponent({
-  name: 'listSalePage',
+  name: 'listEntryPage',
   components: {
     DialogSaleDetails
   },
   setup () {
-    const sales = ref([])
+    const entries = ref([])
     const listSalesItens = ref([])
     const { list, remove, getListStock, update, getById, getListSaleItens } = useApi()
     const { notifyError, notifySuccess } = useNotify()
@@ -79,10 +79,10 @@ export default defineComponent({
     const showDialogDetails = ref(false)
     const $q = useQuasar()
 
-    const handleListSale = async () => {
+    const handleListEntry = async () => {
       try {
         loading.value = true
-        sales.value = await list('list_sales')
+        entries.value = await list('list_entries')
         loading.value = false
       } catch (error) {
         notifyError(error.message)
@@ -90,14 +90,14 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      handleListSale()
+      handleListEntry()
     })
 
-    const updateStockEntry = async (productId, quant) => {
+    const updateStockOutput = async (productId, quant) => {
       try {
         const product = await getById('product', productId)
-        if (product.amount >= 0) {
-          product.amount += quant
+        if (product.amount > 0) {
+          product.amount -= quant
           await update('product', product)
         }
       } catch (error) {
@@ -105,39 +105,39 @@ export default defineComponent({
       }
     }
 
-    const handleRemoveSale = (sale) => {
+    const handleRemoveEntry = (entry) => {
       try {
         $q.dialog({
           title: 'Confirma',
-          message: `Gostaria realmente de remover a venda - ${sale.id}?`,
+          message: `Gostaria realmente de remover a venda - ${entry.id}?`,
           cancel: true,
           persistent: true
         }).onOk(async () => {
-          const stock = await getListStock('mov_stock', sale.id)
+          const stock = await getListStock('mov_stock', entry.id)
           stock.forEach(item => {
-            updateStockEntry(item.product_id, item.quant)
+            updateStockOutput(item.product_id, item.quant)
           })
-          await remove('transaction', sale.id)
+          await remove('transaction', entry.id)
           notifySuccess('Removido com sucesso')
-          handleListSale()
+          handleListEntry()
         })
       } catch (error) {
         notifyError(error.message)
       }
     }
 
-    const handleShowSaleDetails = async (sale) => {
-      const listIens = await getListSaleItens('transaction_has_product', sale.id)
+    const handleShowEntryDetails = async (entry) => {
+      const listIens = await getListSaleItens('transaction_has_product', entry.id)
       listSalesItens.value = listIens
       showDialogDetails.value = true
     }
 
     return {
-      columnsSale,
-      sales,
+      columnsEntry,
+      entries,
       loading,
-      handleRemoveSale,
-      handleShowSaleDetails,
+      handleRemoveEntry,
+      handleShowEntryDetails,
       listSalesItens,
       showDialogDetails
     }

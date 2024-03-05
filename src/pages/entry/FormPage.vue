@@ -3,25 +3,25 @@
     <!-- Informações de gerais do pedido -->
     <div class="row q-gutter-sm q-pa-sm">
       <q-card class="col-md-12 col-sm-12 col-xs-12 q-pa-md">
-        <div class="text-h6 text-center text-bold q-mb-md">Informações de Venda </div>
+        <div class="text-h6 text-center text-bold q-mb-md">Informações de Entrada </div>
         <div class="row q-gutter-md q-px-sm">
           <div class="col-md-7 col-sm-12 col-xs-12">
-            <!-- Informações sobre cliente -->
-            <div class="text-left text-bold">Cliente</div>
+            <!-- Informações sobre fornecedr -->
+            <div class="text-left text-bold">Fornecedor</div>
             <div class="row">
               <q-select
                 class="col-12 "
                 filled
                 standout
                 placeholder="Selecionar"
-                v-model="customers"
+                v-model="providers"
                 use-input
                 hide-selected
                 fill-input
                 input-debounce="0"
-                :options="optionsCustomers"
-                @filter="filterFnCustomers"
-                @input-value="setCustomers"
+                :options="optionsProviders"
+                @filter="filterFnProviders"
+                @input-value="setProviders"
                 dense
               >
                 <template v-slot:no-option>
@@ -144,8 +144,8 @@
       <q-card class="col-md-12 col-sm-12 col-xs-12 q-pa-md" >
         <q-table
         title="Lista Produtos"
-        :rows="listItens"
-        :columns="columnsSaleItens"
+        :rows="listItensEntry"
+        :columns="columnsEntryItens"
         row-key="name"
         virtual-scroll
         v-model:pagination="pagination"
@@ -170,7 +170,7 @@
         <div class="flex text-center q-mr-sm">
           <label class="text-h6"><strong>Total: </strong></label>
           <span class=" q-ml-md text-h6 text-bold">
-            R$ {{saleTotal(listItens)}}
+            R$ {{saleTotal(listItensEntry)}}
           </span>
         </div>
         <div>
@@ -179,9 +179,9 @@
             text-color="white"
             unelevated
             icon="mdi-cart-outline"
-            label="Finalizar Venda"
+            label="Finalizar Entrada"
             size="md"
-            @click="submitEndSale"
+            @click="submitEndEntry"
           />
         </div>
       </q-card>
@@ -194,13 +194,13 @@
 import { defineComponent, onMounted, ref, watch } from 'vue'
 import useApi from 'src/composables/useApi'
 import useNotify from 'src/composables/useNotify'
-import { columnsSaleItens } from './table'
+import { columnsEntryItens } from './table'
 import { useRouter } from 'vue-router'
 
 export default defineComponent({
   setup () {
     const products = ref([])
-    const customers = ref([])
+    const providers = ref([])
     const payments = ref([])
 
     const { list, post, getById, update } = useApi()
@@ -208,16 +208,16 @@ export default defineComponent({
     const router = useRouter()
 
     const listProducts = ref([])
-    const listCustomer = ref([])
+    const listProviders = ref([])
     const listPayment = ref([])
 
     const stringOptions = ref([])
     const newStringOptions = ref([])
     const options = ref(stringOptions)
 
-    const stringOptionsCustomers = ref([])
-    const newStringOptionsCustomers = ref([])
-    const optionsCustomers = ref(stringOptionsCustomers)
+    const stringOptionsProviders = ref([])
+    const newStringOptionsProviders = ref([])
+    const optionsProviders = ref(stringOptionsProviders)
 
     const stringOptionsPayments = ref([])
     const newStringOptionsPayments = ref([])
@@ -232,11 +232,11 @@ export default defineComponent({
       price_total: 0
     })
 
-    const formSale = ref({
+    const formEntry = ref({
       total_value: 0,
-      customer_id: '',
       payment_id: '',
-      type_mov_id: ''
+      type_mov_id: '',
+      provider_id: ''
     })
 
     const formMovStock = ref({
@@ -246,19 +246,19 @@ export default defineComponent({
       quant: 0
     })
 
-    const listItens = ref([])
+    const listItensEntry = ref([])
 
     onMounted(() => {
       handlePerProducts()
-      handlePerCustomers()
+      handlePerProviders()
       handlePerPayments()
-      if (localStorage.getItem('listItens')) {
-        listItens.value = JSON.parse(localStorage.getItem('listItens'))
+      if (localStorage.getItem('listItensEntry')) {
+        listItensEntry.value = JSON.parse(localStorage.getItem('listItensEntry'))
       }
     })
 
-    watch(listItens, () => {
-      saleTotal(listItens.value)
+    watch(listItensEntry, () => {
+      saleTotal(listItensEntry.value)
     })
 
     const insertListItem = () => {
@@ -266,16 +266,31 @@ export default defineComponent({
       formProductList.value.description = products.value.label
       formProductList.value.price_total = (formProductList.value.price_unit * formProductList.value.quant)
       const formList = formProductList.value
-      listItens.value.push(formList)
-      localStorage.setItem('listItens', JSON.stringify(listItens.value))
+      listItensEntry.value.push(formList)
+      localStorage.setItem('listItensEntry', JSON.stringify(listItensEntry.value))
       formProductList.value = { product_id: '', description: '', quant: 0, price_unit: 0, price_total: 0 }
     }
 
-    const updateStockOutput = async (productId, quant) => {
+    const updateStockEntry = async (productId, quant) => {
       try {
         const product = await getById('product', productId)
-        if (product.amount > 0) {
-          product.amount -= quant
+        product.amount += quant
+        await update('product', product)
+      } catch (error) {
+        notifyError(error)
+      }
+    }
+
+    const calculateAvgCostPrice = async (productId, quant, price) => {
+      try {
+        const product = await getById('product', productId)
+        if (product.amount === 0) {
+          product.avg_cost_price = price
+          product.avg_cost_price_ant = 0
+          await update('product', product)
+        } else {
+          product.avg_cost_price_ant = product.avg_cost_price
+          product.avg_cost_price = ((product.avg_cost_price * product.amount) + (quant * price)) / (product.amount + quant)
           await update('product', product)
         }
       } catch (error) {
@@ -296,14 +311,14 @@ export default defineComponent({
       }
     }
 
-    const handlePerCustomers = async () => {
+    const handlePerProviders = async () => {
       try {
-        const data = await list('customer')
-        listCustomer.value = data
-        listCustomer.value.forEach((customer) => {
-          stringOptionsCustomers.value.push({ label: customer.name, id: customer.id })
+        const data = await list('provider')
+        listProviders.value = data
+        listProviders.value.forEach((provider) => {
+          stringOptionsProviders.value.push({ label: provider.name, id: provider.id })
         })
-        newStringOptionsCustomers.value = stringOptionsCustomers.value
+        newStringOptionsProviders.value = stringOptionsProviders.value
       } catch (error) {
         notifyError(error)
       }
@@ -323,8 +338,8 @@ export default defineComponent({
     }
 
     const handleRemoveProduct = (id) => {
-      listItens.value.splice(id, 1)
-      localStorage.setItem('listItens', JSON.stringify(listItens.value))
+      listItensEntry.value.splice(id, 1)
+      localStorage.setItem('listItensEntry', JSON.stringify(listItensEntry.value))
     }
 
     const filterFn = (val, update, abort) => {
@@ -338,13 +353,13 @@ export default defineComponent({
       })
     }
 
-    const filterFnCustomers = (val, update, abort) => {
+    const filterFnProviders = (val, update, abort) => {
       update(() => {
         const needle = val.toLocaleLowerCase()
         if (val === '') {
-          optionsCustomers.value = stringOptionsCustomers.value
+          optionsProviders.value = stringOptionsProviders.value
         } else {
-          optionsCustomers.value = newStringOptionsCustomers.value.filter(v => v.label.toLocaleLowerCase().includes(needle))
+          optionsProviders.value = newStringOptionsProviders.value.filter(v => v.label.toLocaleLowerCase().includes(needle))
         }
       })
     }
@@ -360,37 +375,36 @@ export default defineComponent({
       })
     }
 
-    const submitEndSale = async () => {
+    const submitEndEntry = async () => {
       try {
-        if (listItens.value.length) {
-          formSale.value.customer_id = customers.value.id
-          formSale.value.payment_id = payments.value.id
-          formSale.value.type_mov_id = 2
+        if (listItensEntry.value.length) {
+          formEntry.value.provider_id = providers.value.id
+          formEntry.value.payment_id = payments.value.id
+          formEntry.value.type_mov_id = 1
 
-          formSale.value.total_value = parseFloat(saleTotal(listItens.value))
+          formEntry.value.total_value = parseFloat(saleTotal(listItensEntry.value))
 
-          console.log(formSale.value)
+          const entrada = await post('transaction', formEntry.value)
 
-          const venda = await post('transaction', formSale.value)
-
-          listItens.value.forEach(async (item) => {
-            item.transaction_id = venda[0].id
+          listItensEntry.value.forEach(async (item) => {
+            item.transaction_id = entrada[0].id
 
             await post('transaction_has_product', item)
 
             formMovStock.value.product_id = item.product_id
             formMovStock.value.quant = item.quant
-            formMovStock.value.type_mov_id = 2
-            formMovStock.value.transaction_id = venda[0].id
+            formMovStock.value.type_mov_id = 1
+            formMovStock.value.transaction_id = entrada[0].id
 
             const stock = await post('mov_stock', formMovStock.value)
-            updateStockOutput(stock[0].product_id, stock[0].quant)
+            await calculateAvgCostPrice(item.product_id, parseInt(item.quant), parseFloat(item.price_unit))
+            await updateStockEntry(stock[0].product_id, stock[0].quant)
           })
-          localStorage.removeItem('listItens')
-          notifySuccess('Venda salva com sucesso')
-          router.push({ name: 'sale' })
+          localStorage.removeItem('listItensEntry')
+          notifySuccess('Entrada salva com sucesso')
+          router.push({ name: 'entry' })
         } else {
-          notifyError('Não é permitida venda SEM ITENS')
+          notifyError('Não é permitida entrada SEM ITENS')
         }
       } catch (error) {
         notifyError(error)
@@ -401,8 +415,8 @@ export default defineComponent({
       products.value = val
     }
 
-    const setCustomers = (val) => {
-      customers.value = val
+    const setProviders = (val) => {
+      providers.value = val
     }
 
     const setPayments = (val) => {
@@ -421,24 +435,24 @@ export default defineComponent({
 
     return {
       products,
-      customers,
+      providers,
       payments,
       options,
-      optionsCustomers,
+      optionsProviders,
       optionsPayments,
       handlePerProducts,
-      handlePerCustomers,
+      handlePerProviders,
       handleRemoveProduct,
-      submitEndSale,
+      submitEndEntry,
       filterFn,
-      filterFnCustomers,
+      filterFnProviders,
       filterFnPayments,
       setProduct,
-      setCustomers,
+      setProviders,
       setPayments,
       formProductList,
-      columnsSaleItens,
-      listItens,
+      columnsEntryItens,
+      listItensEntry,
       saleTotal,
       insertListItem,
       pagination: ref({

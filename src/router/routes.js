@@ -19,6 +19,8 @@ const routes = [
       { path: 'dashboard', name: 'dashboard', component: () => import('pages/DashboardPage.vue') },
       { path: 'customer', name: 'customer', component: () => import('pages/customer/ListPage.vue') },
       { path: 'form-customer/:id?', name: 'form-customer', component: () => import('pages/customer/FormPage.vue') },
+      { path: 'provider', name: 'provider', component: () => import('pages/provider/ListPage.vue') },
+      { path: 'form-provider/:id?', name: 'form-provider', component: () => import('pages/provider/FormPage.vue') },
       { path: 'category', name: 'category', component: () => import('src/pages/category/ListPage.vue') },
       { path: 'form-category/:id?', name: 'form-category', component: () => import('src/pages/category/FormPage.vue') },
       { path: 'product', name: 'product', component: () => import('src/pages/product/ListPage.vue') },
@@ -27,7 +29,9 @@ const routes = [
       { path: 'payment', name: 'payment', component: () => import('src/pages/payment/ListPage.vue') },
       { path: 'form-payment/:id?', name: 'form-payment', component: () => import('src/pages/payment/FormPage.vue') },
       { path: 'form-sale/id?', name: 'form-sale', component: () => import('pages/sale/FormPage.vue') },
-      { path: 'sale', name: 'sale', component: () => import('pages/sale/ListPage.vue') }
+      { path: 'sale', name: 'sale', component: () => import('pages/sale/ListPage.vue') },
+      { path: 'form-entry/id?', name: 'form-entry', component: () => import('pages/entry/FormPage.vue') },
+      { path: 'entry', name: 'entry', component: () => import('pages/entry/ListPage.vue') }
     ],
     meta: {
       requiredAuth: true

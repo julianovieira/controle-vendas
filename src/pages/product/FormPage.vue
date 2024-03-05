@@ -19,20 +19,6 @@
                 :rules="[val => (val && val.length > 0) || 'Nome é obrigatório!']"
               />
               <q-editor placeholder="Descrição do produto..." v-model="form.description" min-height="5rem" />
-              <q-input
-                label="Estoque"
-                v-model="form.amount"
-                lazy-rules
-                :rules="[val => !!val || 'Estoque é obrigatório!']"
-                type="number"
-              />
-              <q-input
-                label="Preço"
-                v-model="form.price"
-                lazy-rules
-                :rules="[val => !!val || 'Preço é obrigatório!']"
-                prefix="R$"
-              />
               <q-select
                 label="Categoria"
                 v-model="form.category_id"
@@ -46,6 +32,17 @@
                 <template v-slot:after>
                   <q-btn round dense flat icon="add_circle_outline" @click="handleShowAddCategory" />
                 </template>
+              </q-select>
+              <q-select
+                label="Fornecedor"
+                v-model="form.provider_id"
+                :options="optionsProvider"
+                option-value="id"
+                option-label="name"
+                map-options
+                emit-value
+                :rules="[val => !!val || 'Fornecedor é obrigatório!']"
+               >
               </q-select>
               <q-btn
                 :label="isUpdate ? 'Atualizar' : 'Salvar'"
@@ -94,6 +91,7 @@ export default defineComponent({
     const { user } = useAuthUser()
     const table = 'product'
     const optionsCategory = ref([])
+    const optionsProvider = ref([])
     const showDialogAddCategory = ref(false)
     const img = ref([])
 
@@ -103,7 +101,9 @@ export default defineComponent({
       description: '',
       amount: 0,
       price: 0,
+      avg_cost_price: 0,
       category_id: '',
+      provider_id: '',
       image_url: ''
     })
 
@@ -111,6 +111,7 @@ export default defineComponent({
 
     onMounted(() => {
       handleListCategory()
+      handleListProvider()
       if (isUpdate.value) {
         handleGetProduct(isUpdate.value)
       }
@@ -126,6 +127,10 @@ export default defineComponent({
 
     const handleListCategory = async () => {
       optionsCategory.value = await listPublic('category', user.value.id)
+    }
+
+    const handleListProvider = async () => {
+      optionsProvider.value = await listPublic('provider', user.value.id)
     }
 
     const handleGetProduct = async (id) => {
@@ -162,6 +167,7 @@ export default defineComponent({
     return {
       form,
       optionsCategory,
+      optionsProvider,
       handleSubmit,
       handleShowAddCategory,
       showDialogAddCategory,

@@ -8,14 +8,14 @@ const formatCurrency = (currency) => {
   return formatted
 }
 
-const formatCPF = (cpf) => {
+const formatCnpj = (cnpj) => {
   // retira os caracteres indesejados...
-  cpf = cpf.replace(/[^\d]/g, '')
-  if (cpf.length === 11) {
+  cnpj = cnpj.replace(/[^\d]/g, '')
+  if (cnpj.length === 14) {
     // realizar a formatação...
-    cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})/, '$1.$2.$3-')
+    cnpj = cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})/, '$1.$2.$3/$4-')
   }
-  return cpf
+  return cnpj
 }
 
 const formatPhone = (phone) => {
@@ -35,7 +35,7 @@ const formatDate = (data) => {
 
 export {
   formatCurrency,
-  formatCPF,
+  formatCnpj,
   formatPhone,
   formatDate
 }

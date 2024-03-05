@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Vendas
+          Ctrl Vendas
         </q-toolbar-title>
 
         <dark-mode-toggle />
@@ -81,16 +81,28 @@ const linksList = [
     routeName: 'dashboard'
   },
   {
-    title: 'Lançamentos',
+    title: 'Vendas',
     caption: '',
-    icon: 'mdi-cart-arrow-right',
+    icon: 'mdi-cart-arrow-up',
     routeName: 'sale'
+  },
+  {
+    title: 'Entradas',
+    caption: '',
+    icon: 'mdi-cart-arrow-down',
+    routeName: 'entry'
   },
   {
     title: 'Clientes',
     caption: '',
     icon: 'mdi-card-account-details',
     routeName: 'customer'
+  },
+  {
+    title: 'Fornecedores',
+    caption: '',
+    icon: 'mdi-package-variant',
+    routeName: 'provider'
   },
   {
     title: 'Categorias',

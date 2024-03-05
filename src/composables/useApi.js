@@ -64,16 +64,23 @@ export default function useApi () {
     return data[0]
   }
 
-  const getListStock = async (tabela, idSale) => {
+  const getListStock = async (tabela, idTransaction) => {
     const { data, error } = await supabase
       .from(tabela)
       .select('*')
-      .eq('sale_id', idSale)
+      .eq('transaction_id', idTransaction)
     if (error) throw error
-    console.log(data)
     return data
   }
 
+  const getListSaleItens = async (tabela, idSale) => {
+    const { data, error } = await supabase
+      .from(tabela)
+      .select('*')
+      .eq('transaction_id', idSale)
+    if (error) throw error
+    return data
+  }
   const post = async (tabela, form) => {
     const { data, error } = await supabase
       .from(tabela)
@@ -93,6 +100,7 @@ export default function useApi () {
       .from(tabela)
       .update({ ...form })
       .match({ id: form.id })
+      .select()
     if (error) throw error
     return data
   }
@@ -155,6 +163,7 @@ export default function useApi () {
     fetchCount,
     getById,
     getListStock,
+    getListSaleItens,
     post,
     update,
     remove,

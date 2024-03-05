@@ -8,7 +8,7 @@
         <q-card>
             <q-card-section>
                 <div class="text-h6">
-                    Details
+                    Detalhes
                 </div>
             </q-card-section>
             <q-card-section v-if="product.image_url">
