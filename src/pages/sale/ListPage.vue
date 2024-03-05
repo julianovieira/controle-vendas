@@ -73,7 +73,7 @@ export default defineComponent({
   setup () {
     const sales = ref([])
     const listSalesItens = ref([])
-    const { list, remove, getListStock, update, getById, getListSaleItens } = useApi()
+    const { list, remove, getListStock, update, getById, getListTransactionItens } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     const loading = ref(true)
     const showDialogDetails = ref(false)
@@ -127,7 +127,7 @@ export default defineComponent({
     }
 
     const handleShowSaleDetails = async (sale) => {
-      const listIens = await getListSaleItens('transaction_has_product', sale.id)
+      const listIens = await getListTransactionItens('transaction_has_product', sale.id)
       listSalesItens.value = listIens
       showDialogDetails.value = true
     }

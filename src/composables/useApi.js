@@ -73,11 +73,11 @@ export default function useApi () {
     return data
   }
 
-  const getListSaleItens = async (tabela, idSale) => {
+  const getListTransactionItens = async (tabela, idTransaction) => {
     const { data, error } = await supabase
       .from(tabela)
       .select('*')
-      .eq('transaction_id', idSale)
+      .eq('transaction_id', idTransaction)
     if (error) throw error
     return data
   }
@@ -163,7 +163,7 @@ export default function useApi () {
     fetchCount,
     getById,
     getListStock,
-    getListSaleItens,
+    getListTransactionItens,
     post,
     update,
     remove,

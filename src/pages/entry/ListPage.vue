@@ -73,7 +73,7 @@ export default defineComponent({
   setup () {
     const entries = ref([])
     const listSalesItens = ref([])
-    const { list, remove, getListStock, update, getById, getListSaleItens } = useApi()
+    const { list, remove, getListStock, update, getById, getListTransactionItens } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     const loading = ref(true)
     const showDialogDetails = ref(false)
@@ -105,6 +105,26 @@ export default defineComponent({
       }
     }
 
+    const recalculateAvgCostPrice = async (entry) => {
+      try {
+        const transactions = await getListTransactionItens('transaction_has_product', entry.id)
+        transactions.forEach(async (item) => {
+          const product = await getById('product', item.product_id)
+          if (product.avg_cost_price_ant > 0) {
+            product.avg_cost_price = product.avg_cost_price_ant
+            product.avg_cost_price_ant = 0
+            await update('product', product)
+          }
+          if (entries.value.length === 1) {
+            product.avg_cost_price = 0
+            await update('product', product)
+          }
+        })
+      } catch (error) {
+        notifyError(error)
+      }
+    }
+
     const handleRemoveEntry = (entry) => {
       try {
         $q.dialog({
@@ -117,6 +137,7 @@ export default defineComponent({
           stock.forEach(item => {
             updateStockOutput(item.product_id, item.quant)
           })
+          await recalculateAvgCostPrice(entry)
           await remove('transaction', entry.id)
           notifySuccess('Removido com sucesso')
           handleListEntry()
@@ -127,7 +148,7 @@ export default defineComponent({
     }
 
     const handleShowEntryDetails = async (entry) => {
-      const listIens = await getListSaleItens('transaction_has_product', entry.id)
+      const listIens = await getListTransactionItens('transaction_has_product', entry.id)
       listSalesItens.value = listIens
       showDialogDetails.value = true
     }
