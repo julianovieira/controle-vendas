@@ -26,7 +26,7 @@
                 lazy-rules
                 :rules="[val => (val && val.length > 0) || 'Telefone é Obrigatório!']"
               />
-              <q-editor placeholder="Digite seu endereço..." v-model="form.description" min-height="5rem" />
+              <q-editor placeholder="Observações cliente..." v-model="form.description" min-height="5rem" />
               <q-btn
                 :label="isUpdate ? 'Atualizar' : 'Salvar'"
                 type="submit"

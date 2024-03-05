@@ -11,7 +11,7 @@ const columnsSaleItens = [
 ]
 
 const columnsSale = [
-  { name: 'id', align: 'left', label: 'Código', field: 'id', sortable: false },
+  { name: 'id', align: 'left', label: 'Nr Docto', field: 'id', sortable: false },
   { name: 'created_at', align: 'left', label: 'Data Emissão', field: 'created_at', format: (val) => formatDate(val), sortable: true },
   { name: 'type_mov_name', align: 'left', label: 'Tipo Movto', field: 'type_mov_name', sortable: false },
   { name: 'customer_name', align: 'left', label: 'Cod Cliente', field: 'customer_name', sortable: true },

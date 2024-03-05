@@ -119,11 +119,12 @@
               type="number"
             />
           </div>
-          <div class="row justify-between">
+          <div class="row justify-between q-mt-sm">
             <q-btn
+              :disable="isDisableBtnInsertItens"
+              :color="!isDisableBtnInsertItens ? 'primary' : 'grey-6'"
               flat
-              class="q-pa-sm"
-              color="primary"
+              class="q-pa-xs"
               label="Inserir Produto"
               @click="insertListItem"
               dense
@@ -191,7 +192,7 @@
 
 <script>
 
-import { defineComponent, onMounted, ref, watch } from 'vue'
+import { defineComponent, onMounted, ref, watch, computed } from 'vue'
 import useApi from 'src/composables/useApi'
 import useNotify from 'src/composables/useNotify'
 import { columnsSaleItens } from './table'
@@ -248,6 +249,10 @@ export default defineComponent({
 
     const listItens = ref([])
 
+    const isDisableBtnInsertItens = computed(() => {
+      return !(formProductList.value.quant > 0 && formProductList.value.price_unit > 0)
+    })
+
     onMounted(() => {
       handlePerProducts()
       handlePerCustomers()
@@ -262,13 +267,17 @@ export default defineComponent({
     })
 
     const insertListItem = () => {
-      formProductList.value.product_id = products.value.id
-      formProductList.value.description = products.value.label
-      formProductList.value.price_total = (formProductList.value.price_unit * formProductList.value.quant)
-      const formList = formProductList.value
-      listItens.value.push(formList)
-      localStorage.setItem('listItens', JSON.stringify(listItens.value))
-      formProductList.value = { product_id: '', description: '', quant: 0, price_unit: 0, price_total: 0 }
+      try {
+        formProductList.value.product_id = products.value.id
+        formProductList.value.description = products.value.label
+        formProductList.value.price_total = (formProductList.value.price_unit * formProductList.value.quant)
+        const formList = formProductList.value
+        listItens.value.push(formList)
+        localStorage.setItem('listItens', JSON.stringify(listItens.value))
+        formProductList.value = { product_id: '', description: '', quant: 0, price_unit: 0, price_total: 0 }
+      } catch (error) {
+        notifyError(error)
+      }
     }
 
     const updateStockOutput = async (productId, quant) => {
@@ -420,6 +429,7 @@ export default defineComponent({
     }
 
     return {
+      isDisableBtnInsertItens,
       products,
       customers,
       payments,
