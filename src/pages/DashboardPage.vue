@@ -13,7 +13,7 @@
         <card-dashboard-total
         class="bg-negative"
           table="list_entries"
-          label="Vendas"
+          label="Compras"
           icon="mdi-cart-variant"
         />
       </div>

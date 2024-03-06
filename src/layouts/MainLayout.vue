@@ -113,7 +113,7 @@ const linksList = [
   {
     title: 'Produtos',
     caption: '',
-    icon: 'mdi-archive',
+    icon: 'mdi-gift-outline',
     routeName: 'product'
   },
   {
