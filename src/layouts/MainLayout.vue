@@ -83,19 +83,19 @@ const linksList = [
   {
     title: 'Vendas',
     caption: '',
-    icon: 'mdi-cart-arrow-up',
+    icon: 'mdi-finance',
     routeName: 'sale'
   },
   {
     title: 'Entradas',
     caption: '',
-    icon: 'mdi-cart-arrow-down',
+    icon: 'mdi-cart-variant',
     routeName: 'entry'
   },
   {
     title: 'Clientes',
     caption: '',
-    icon: 'mdi-card-account-details',
+    icon: 'mdi-account-group',
     routeName: 'customer'
   },
   {

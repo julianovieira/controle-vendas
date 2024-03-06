@@ -1,24 +1,28 @@
 <template>
-  <q-card class="my-card" bordered v-ripple:primary>
+  <q-card bordered v-ripple:primary>
     <q-skeleton height="50px" v-if="load" />
-    <q-card-section horizontal v-else>
-      <div class="col flex flex-center text-h5">
-        {{ count }} - {{ label }}
+    <q-card-section class="row justify-between" v-else>
+      <div>
+        <div class="text-h6">
+          {{ count }}
+        </div>
+        <div class="text-h6">
+          {{ label }}
+        </div>
       </div>
-      <q-card-actions vertical class="justify-around q-px-md">
-        <q-btn flat round color="primary" :icon="icon" />
-      </q-card-actions>
+      <div>
+        <q-btn flat round color="white" size="1.5rem" :icon="icon" />
+      </div>
     </q-card-section>
   </q-card>
 </template>
 
 <script>
-import useAuthUser from 'src/composables/useAuthUser'
 import useApi from 'src/composables/useApi'
 import { defineComponent, ref, onMounted } from 'vue'
 
 export default defineComponent({
-  name: 'CardDashboard',
+  name: 'CardDashboardCount',
   props: {
     table: {
       type: String,
@@ -37,11 +41,10 @@ export default defineComponent({
   setup (props) {
     const count = ref(0)
     const load = ref(true)
-    const { user } = useAuthUser()
     const { fetchCount } = useApi()
 
     onMounted(async () => {
-      const response = await fetchCount(props.table, user.value.id)
+      const response = await fetchCount(props.table)
       count.value = response.count
       load.value = false
     })

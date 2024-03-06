@@ -42,11 +42,10 @@ export default function useApi () {
     return data
   }
 
-  const fetchCount = async (tabela, userId) => {
+  const fetchCount = async (tabela) => {
     const { data, error, count } = await supabase
       .from(tabela)
       .select('*', { count: 'exact' })
-      .eq('user_id', userId)
 
     if (error) throw error
     return {

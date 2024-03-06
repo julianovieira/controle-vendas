@@ -266,15 +266,20 @@ export default defineComponent({
       saleTotal(listItens.value)
     })
 
-    const insertListItem = () => {
+    const insertListItem = async () => {
       try {
         formProductList.value.product_id = products.value.id
         formProductList.value.description = products.value.label
         formProductList.value.price_total = (formProductList.value.price_unit * formProductList.value.quant)
-        const formList = formProductList.value
-        listItens.value.push(formList)
-        localStorage.setItem('listItens', JSON.stringify(listItens.value))
-        formProductList.value = { product_id: '', description: '', quant: 0, price_unit: 0, price_total: 0 }
+        const product = await getById('product', products.value.id)
+        if (formProductList.value.quant <= product.amount) {
+          const formList = formProductList.value
+          listItens.value.push(formList)
+          localStorage.setItem('listItens', JSON.stringify(listItens.value))
+          formProductList.value = { product_id: '', description: '', quant: 0, price_unit: 0, price_total: 0 }
+        } else {
+          notifyError(`Estoque do produto - ${products.value.label} - insuficiente, consulte o estoque do produto.`)
+        }
       } catch (error) {
         notifyError(error)
       }
