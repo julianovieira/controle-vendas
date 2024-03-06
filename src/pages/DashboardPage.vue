@@ -30,7 +30,7 @@
           class="bg-warning"
           table="product"
           label="Produtos"
-          icon="mdi-chart-box-outline"
+          icon="mdi-gift-open-outline"
         />
       </div>
     </div>
