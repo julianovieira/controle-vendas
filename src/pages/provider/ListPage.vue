@@ -8,12 +8,18 @@ import { pushScopeId } from 'vue';
         :columns="columnsProvider"
         :loading="loading"
         row-key="id"
+        :filter="filter"
       >
       <template v-slot:top>
         <span class="text-h6">
             Fornecedores
         </span>
         <q-space />
+        <q-input outlined dense debounce="200" v-model="filter" placeholder="Buscar Fornecedor" class="q-mr-sm">
+          <template v-slot:append>
+            <q-icon name="mdi-magnify" />
+          </template>
+        </q-input>
         <q-btn v-if="$q.platform.is.desktop"
           label="Adicionar"
           color="primary"
@@ -64,6 +70,7 @@ export default defineComponent({
   name: 'listCustomerPage',
   setup () {
     const providers = ref([])
+    const filter = ref('')
     const { list, remove } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     const table = 'provider'
@@ -109,6 +116,7 @@ export default defineComponent({
     return {
       columnsProvider,
       providers,
+      filter,
       loading,
       handleEdit,
       handleRemoveProvider

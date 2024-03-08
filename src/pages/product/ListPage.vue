@@ -6,6 +6,7 @@
         :rows="products"
         :columns="columnsProduct"
         :loading="loading"
+        :filter="filter"
         row-key="id"
       >
       <template v-slot:top>
@@ -33,6 +34,11 @@
           @click="handleCopyPublicUrl"
         />
         <q-space />
+        <q-input outlined dense debounce="200" v-model="filter" placeholder="Buscar Produto" class="q-mr-sm">
+          <template v-slot:append>
+            <q-icon name="mdi-magnify" />
+          </template>
+        </q-input>
         <q-btn v-if="$q.platform.is.desktop"
           label="Adicionar"
           color="primary"
@@ -93,6 +99,7 @@ export default defineComponent({
   name: 'listProductPage',
   setup () {
     const products = ref([])
+    const filter = ref('')
     const { list, remove } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     const { user } = useAuthUser()
@@ -159,6 +166,7 @@ export default defineComponent({
     return {
       columnsProduct,
       products,
+      filter,
       loading,
       handleEdit,
       handleGoToStore,

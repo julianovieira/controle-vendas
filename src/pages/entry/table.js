@@ -15,7 +15,7 @@ const columnsEntry = [
   { name: 'created_at', align: 'left', label: 'Data Emissão', field: 'created_at', format: (val) => formatDate(val), sortable: true },
   { name: 'type_mov_name', align: 'left', label: 'Tipo Movto', field: 'type_mov_name', sortable: false },
   { name: 'provider_name', align: 'left', label: 'Fornecedor', field: 'provider_name', sortable: true },
-  { name: 'payment_name', align: 'left', label: 'Cod Pagto', field: 'payment_name', sortable: true },
+  { name: 'payment_name', align: 'left', label: 'Forma Pagto', field: 'payment_name', sortable: true },
   { name: 'total_value', align: 'left', label: 'Preço Total', field: 'total_value', format: (val) => formatCurrency(val), sortable: true },
   { name: 'actions', align: 'right', label: 'Ações', field: 'actions' }
 ]

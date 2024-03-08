@@ -8,12 +8,18 @@ import { pushScopeId } from 'vue';
         :columns="columnsCategory"
         :loading="loading"
         row-key="id"
+        :filter="filter"
       >
       <template v-slot:top>
         <span class="text-h6">
             Categorias
         </span>
         <q-space />
+        <q-input outlined dense debounce="200" v-model="filter" placeholder="Buscar Categoria" class="q-mr-sm">
+          <template v-slot:append>
+            <q-icon name="mdi-magnify" />
+          </template>
+        </q-input>
         <q-btn v-if="$q.platform.is.desktop"
           label="Adicionar"
           color="primary"
@@ -64,6 +70,7 @@ export default defineComponent({
   name: 'listCategoryPage',
   setup () {
     const categories = ref([])
+    const filter = ref('')
     const { list, remove } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     const table = 'category'
@@ -109,6 +116,7 @@ export default defineComponent({
     return {
       columnsCategory,
       categories,
+      filter,
       loading,
       handleEdit,
       handleRemoveCategory

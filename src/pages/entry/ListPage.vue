@@ -6,13 +6,20 @@
         :rows="entries"
         :columns="columnsEntry"
         :loading="loading"
+        :filer="filter"
         row-key="id"
+        v-model:pagination="pagination"
       >
       <template v-slot:top>
         <span class="text-h6">
             Entradas
         </span>
         <q-space />
+        <q-input outlined dense debounce="200" v-model="filter" placeholder="Buscar Entrada" class="q-mr-sm">
+          <template v-slot:append>
+            <q-icon name="mdi-magnify" />
+          </template>
+        </q-input>
         <q-btn v-if="$q.platform.is.desktop"
           label="Adicionar"
           color="primary"
@@ -73,11 +80,17 @@ export default defineComponent({
   setup () {
     const entries = ref([])
     const listSalesItens = ref([])
+    const filter = ref('')
     const { list, remove, getListStock, update, getById, getListTransactionItens } = useApi()
     const { notifyError, notifySuccess } = useNotify()
     const loading = ref(true)
     const showDialogDetails = ref(false)
     const $q = useQuasar()
+
+    const pagination = ref({
+      sortBy: 'created_at',
+      descending: true
+    })
 
     const handleListEntry = async () => {
       try {
@@ -156,6 +169,8 @@ export default defineComponent({
     return {
       columnsEntry,
       entries,
+      filter,
+      pagination,
       loading,
       handleRemoveEntry,
       handleShowEntryDetails,

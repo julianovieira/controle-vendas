@@ -9,7 +9,7 @@
             <q-card-section>
               <div class="q-mt-sm">
                 <q-table
-                  title="Itens Vendidos"
+                  title="Itens"
                   :rows="listItens"
                   :columns="columnsSaleItens"
                   row-key="product_id"
