@@ -12,10 +12,10 @@ import { pushScopeId } from 'vue';
       >
       <template v-slot:top>
         <span class="text-h6">
-            Formas de Pagamentos
+            Forma de Pagmentos
         </span>
         <q-space />
-        <q-input outlined dense debounce="200" v-model="filter" placeholder="Buscar Forma Pgto" class="q-mr-sm">
+        <q-input outlined dense debounce="200" v-model="filter" placeholder="Buscar Pagamento" class="q-mr-sm">
           <template v-slot:append>
             <q-icon name="mdi-magnify" />
           </template>
